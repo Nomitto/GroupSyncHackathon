@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { auth, provider } from "./config"
+import { auth, provider } from "../config"
 import { signInWithPopup } from "firebase/auth";
+import Home from "./Home";
 
-function signIn() {
+function SignIn() {
     const [value, setValue] = useState('')
     const handleClick = () => {
         signInWithPopup(auth, provider).then((data) => {
@@ -18,7 +19,7 @@ function signIn() {
     return (
         <div>
             {value?<Home/>:
-            <button onClick={handleClick}>Signin With Google</button>
+            <button onClick={handleClick}>Sign In With Google</button>
             }
         </div>
     );
