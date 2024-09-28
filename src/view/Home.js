@@ -9,8 +9,8 @@ function Home() {
     setShowPopUp(true);
   };
 
-  const handleCreateGroup = () => {
-    //TO be implemented
+  const handleCreateGroup = (groupName) => {
+    console.log("Group created: " + groupName);
   }
 
   const closePopUp = () => {
@@ -27,7 +27,7 @@ function Home() {
       <h1>Home Page</h1>
       <button onClick={logout}>Logout</button>
       <CreateGroupButton onClick={openPopUp} />
-      {showPopUp && <CreateGroupPopUp closePopUp={closePopUp} />}
+      {showPopUp && <CreateGroupPopUp closePopUp={closePopUp} handleCreateGroup={handleCreateGroup} />}
     </div>
   );
 }
