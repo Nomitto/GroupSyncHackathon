@@ -14,61 +14,61 @@ const firebaseConfig = {
   projectId: "groupsync-96180",
   storageBucket: "groupsync-96180.appspot.com",
   messagingSenderId: "835797552606",
-  appId: "1:835797552606:web:804155d87f0cc0dc34214f"
+  appId: "1:835797552606:web:804155d87f0cc0dc34214f",
 };
 
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 const db = getFirestore();
 
 function getUID() {
-    const user = getAuth(app).currentUser;
-    return user.uid;
+  const user = getAuth(app).currentUser;
+  return user.uid;
 }
 
 function getName() {
-    const user = getAuth(app).currentUser;
-    return user.name;
+  const user = getAuth(app).currentUser;
+  return user.name;
 }
 
 async function getGroups() {
-    const docSnap = getDoc(doc(db, "users", getUID()));
-    const data = (await docSnap).data();
-    return data["groups"];
+  const docSnap = getDoc(doc(db, "users", getUID()));
+  const data = (await docSnap).data();
+  return data["groups"];
 }
 
 async function handleSignIn(name, uid) {
-    const docRef = doc(db, "users", uid);
-    const docSnap = getDoc(docRef);
+  const docRef = doc(db, "users", uid);
+  const docSnap = getDoc(docRef);
 
-    if ((await docSnap).exists()) {
-        const userData = (await docSnap).data();
-        console.log("user exists");
-        console.log(userData["name"]);
-    } else {
-        console.log("user does not exist");
-        
-        await setDoc(doc(db, "users", uid), {
-            name: name,
-            uid: uid,
-            groups: [],
-        });
+  if ((await docSnap).exists()) {
+    const userData = (await docSnap).data();
+    console.log("user exists");
+    console.log(userData["name"]);
+  } else {
+    console.log("user does not exist");
 
-        console.log("account created");
-    }
+    await setDoc(doc(db, "users", uid), {
+      name: name,
+      uid: uid,
+      groups: [],
+    });
+
+    console.log("account created");
+  }
 }
 
 async function handleCreateGroup(name) {
-    const groupName = getUID() + name;
-    await setDoc(doc(db, "groups", groupName), {
-        owner: getName(),
-        name: name,
-        members: []
-    })
+  const groupName = getUID() + name;
+  await setDoc(doc(db, "groups", groupName), {
+    owner: getName(),
+    name: name,
+    members: [],
+  });
 }
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
+const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export { auth, provider, handleSignIn, handleCreateGroup, getGroups };
