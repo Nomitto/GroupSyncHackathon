@@ -5,6 +5,8 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+const db = getFirestore();
+
 const firebaseConfig = {
   apiKey: "AIzaSyC0pRjX1S6fCnU4lXIcTZYE2k5Eg_qgh-w",
   authDomain: "groupsync-96180.firebaseapp.com",
@@ -14,8 +16,15 @@ const firebaseConfig = {
   appId: "1:835797552606:web:804155d87f0cc0dc34214f"
 };
 
+async function saveNewUser() {
+    const docRef = await addDoc(collection(db, "users"), {
+        
+    })
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
-export { auth, provider };
+
+export { auth, provider, saveNewUser };
