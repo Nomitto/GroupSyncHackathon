@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { getGroups } from "../firebase";
-
+import React, { useEffect, useState } from "react";
+import Popup from 'react'
+import { getGroups, getName, getUID, handleCreateGroup } from "../firebase";
 import './Home.css'; // Import the CSS file
 
 import CreateGroupButton from "../components/CreateGroupButton.tsx";
@@ -37,27 +37,34 @@ function Home() {
     window.location.reload();
   };
 
-  return (
-    <div className="home-container">
-      <h1>Home Page</h1>
+  const [userGroups, setUserGroups] = useState([])
+  const [loading, setLoading] = useState(true)
 
-      {/* Logout Button */}
-      <button onClick={handleLogout} className="logout-button">
-        Logout
-      </button>
+  useEffect(() => {
+    async function fetchData() {
+        try {
+            const res = await getGroups();
+            setUserGroups(res);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
-      {/* Button to open Create Group popup */}
-      <CreateGroupButton onClick={handleOpenPopUp} />
+    fetchData()
+  }, []);
 
-      {/* Group creation popup */}
-      {showPopUp && (
-        <CreateGroupPopUp
-          closePopUp={handleClosePopUp}
-          handleCreateGroup={handleCreateGroup}
-        />
-      )}
-    </div>
-  );
+  if (loading) {
+      return <p>Loading...</p>
+  }
+
+    return (
+        <div>
+            <h1>Home Page</h1>
+            <button onClick={logout}>Logout</button>
+        </div>
+    );
 }
 
 export default Home;

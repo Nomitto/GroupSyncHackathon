@@ -27,13 +27,15 @@ function getUID() {
 
 function getName() {
     const user = getAuth(app).currentUser;
-    return user.name;
+    return user.displayName;
 }
 
 async function getGroups() {
     const docSnap = getDoc(doc(db, "users", getUID()));
     const data = (await docSnap).data();
-    return data["groups"];
+    const groupArr = data["groups"];
+
+    return groupArr;
 }
 
 async function handleSignIn(name, uid) {
@@ -51,6 +53,7 @@ async function handleSignIn(name, uid) {
             name: name,
             uid: uid,
             groups: [],
+            busyDays: [],
         });
 
         console.log("account created");
@@ -62,7 +65,18 @@ async function handleCreateGroupBE(name) {
     await setDoc(doc(db, "groups", groupName), {
         owner: getName(),
         name: name,
-        members: []
+        members: [],
+        busyDays: {},
+    })
+
+    const currUserDoc = (await getDoc(doc(db, "users", getUID()))).data()
+    const currGroups =  currUserDoc["groups"]
+    currGroups.push(groupName)
+
+    await setDoc(doc(db, "users", getUID()), {
+        name: getName(),
+        uid: getUID(),
+        groups: currGroups
     })
 }
 
@@ -71,4 +85,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, handleSignIn, handleCreateGroupBE, getGroups };
+export { auth, provider, handleSignIn, handleCreateGroup, getGroups, getUID, getName };
