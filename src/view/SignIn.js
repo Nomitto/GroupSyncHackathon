@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { auth, provider, handleSignIn } from "../config"
+import { auth, provider, handleSignIn } from "../firebase"
 import { signInWithPopup } from "firebase/auth";
 import Home from "./Home";
 
 function SignIn() {
-    const [value, setValue] = useState('')
+    const [signedIn, setValue] = useState('')
+
     const handleClick = async () => {
         signInWithPopup(auth, provider).then(async (data) => {
             setValue(data.user.email)
@@ -19,9 +20,7 @@ function SignIn() {
 
     return (
         <div>
-            {value?<Home/>:
-            <button onClick={handleClick}>Sign In With Google</button>
-            }
+            {signedIn ? <Home/> : <button onClick={handleClick}>Sign In With Google</button> }
         </div>
     );
 }

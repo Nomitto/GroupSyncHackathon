@@ -2,7 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import firebase from "firebase/compat/app";
-import { getFirestore,addDoc,collection, getDoc, doc, setDoc } from "firebase/firestore";
+import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,6 +19,22 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 const db = getFirestore();
+
+function getUID() {
+    const user = getAuth(app).currentUser;
+    return user.uid;
+}
+
+function getName() {
+    const user = getAuth(app).currentUser;
+    return user.name;
+}
+
+async function getGroups() {
+    const docSnap = getDoc(doc(db, "users", getUID()));
+    const data = (await docSnap).data();
+    return data["groups"];
+}
 
 async function handleSignIn(name, uid) {
     const docRef = doc(db, "users", uid);
@@ -40,9 +57,18 @@ async function handleSignIn(name, uid) {
     }
 }
 
+async function handleCreateGroup(name) {
+    const groupName = getUID() + name;
+    await setDoc(doc(db, "groups", groupName), {
+        owner: getName(),
+        name: name,
+        members: []
+    })
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, handleSignIn };
+export { auth, provider, handleSignIn, handleCreateGroup, getGroups };
