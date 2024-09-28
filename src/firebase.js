@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import firebase from "firebase/compat/app";
 import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
+import axios from "axios";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -64,6 +65,29 @@ async function handleCreateGroup(name) {
     name: name,
     members: [],
   });
+}
+
+// New functions to call the endpoints
+async function listCalendarIds() {
+  try {
+    const response = await axios.get("/listCalendarIds");
+    return response.data;
+  } catch (error) {
+    console.error("Error listing calendar IDs:", error);
+    throw error;
+  }
+}
+
+async function getAvailableDays(calendarId) {
+  try {
+    const response = await axios.get("/getAvailableDays", {
+      params: { calendarId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting available days:", error);
+    throw error;
+  }
 }
 
 // Initialize Firebase

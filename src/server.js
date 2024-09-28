@@ -31,7 +31,7 @@ app.get("/listCalendarIds", async (req, res) => {
 app.get("/getAvailableDays", async (req, res) => {
   const { calendarId } = req.query;
   try {
-    const availableDays = await getAvailableDays(oAuth2Client, calendarId);
+    const availableDays = await getAvailableDays(oAuth2Client, "primary");
     res.json(availableDays);
   } catch (error) {
     res.status(500).send(error.toString());
