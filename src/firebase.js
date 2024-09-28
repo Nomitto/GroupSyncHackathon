@@ -57,7 +57,7 @@ async function handleSignIn(name, uid) {
     }
 }
 
-async function handleCreateGroup(name) {
+async function handleCreateGroupBE(name) {
     const groupName = getUID() + name;
     await setDoc(doc(db, "groups", groupName), {
         owner: getName(),
@@ -71,4 +71,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, handleSignIn, handleCreateGroup, getGroups };
+export { auth, provider, handleSignIn, handleCreateGroupBE, getGroups };

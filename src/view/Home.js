@@ -1,35 +1,61 @@
-import React, { useEffect, useState } from "react";
-import Popup from 'react'
+import React, { useState } from "react";
 import { getGroups } from "../firebase";
+
+import './Home.css'; // Import the CSS file
+
 import CreateGroupButton from "../components/CreateGroupButton.tsx";
 import CreateGroupPopUp from "../components/CreateGroupPopUp.tsx";
+import handleCreateGroupBE from "../firebase.js";
 
 function Home() {
   const [showPopUp, setShowPopUp] = useState(false);
 
-  const openPopUp = () => {
+  // Open the group creation popup
+  const handleOpenPopUp = () => {
     setShowPopUp(true);
   };
 
-  const handleCreateGroup = (groupName) => {
-    console.log("Group created: " + groupName);
-  }
-
-  const closePopUp = () => {
+  // Close the group creation popup
+  const handleClosePopUp = () => {
     setShowPopUp(false);
   };
 
-  const logout = () => {
+  // Handle group creation with group name and member emails
+  const handleCreateGroup = (groupName, emails) => {
+    if (!groupName || emails.length === 0) {
+      console.error("Group name or emails missing");
+      return;
+    }
+    console.log(`Group created: ${groupName}, with members: ${emails.join(", ")}`);
+    handleCreateGroupBE();
+    handleClosePopUp();
+  };
+
+  // Handle user logout
+  const handleLogout = () => {
     localStorage.clear();
     window.location.reload();
   };
 
   return (
-    <div>
+    <div className="home-container">
       <h1>Home Page</h1>
-      <button onClick={logout}>Logout</button>
-      <CreateGroupButton onClick={openPopUp} />
-      {showPopUp && <CreateGroupPopUp closePopUp={closePopUp} handleCreateGroup={handleCreateGroup} />}
+
+      {/* Logout Button */}
+      <button onClick={handleLogout} className="logout-button">
+        Logout
+      </button>
+
+      {/* Button to open Create Group popup */}
+      <CreateGroupButton onClick={handleOpenPopUp} />
+
+      {/* Group creation popup */}
+      {showPopUp && (
+        <CreateGroupPopUp
+          closePopUp={handleClosePopUp}
+          handleCreateGroup={handleCreateGroup}
+        />
+      )}
     </div>
   );
 }
