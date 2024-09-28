@@ -14,75 +14,83 @@ const firebaseConfig = {
   projectId: "groupsync-96180",
   storageBucket: "groupsync-96180.appspot.com",
   messagingSenderId: "835797552606",
-  appId: "1:835797552606:web:804155d87f0cc0dc34214f"
+  appId: "1:835797552606:web:804155d87f0cc0dc34214f",
 };
 
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig);
 const db = getFirestore();
 
 function getUID() {
-    const user = getAuth(app).currentUser;
-    return user.uid;
+  const user = getAuth(app).currentUser;
+  return user.uid;
 }
 
 function getName() {
-    const user = getAuth(app).currentUser;
-    return user.displayName;
+  const user = getAuth(app).currentUser;
+  return user.displayName;
 }
 
 async function getGroups() {
-    const docSnap = getDoc(doc(db, "users", getUID()));
-    const data = (await docSnap).data();
-    const groupArr = data["groups"];
+  const docSnap = getDoc(doc(db, "users", getUID()));
+  const data = (await docSnap).data();
+  const groupArr = data["groups"];
 
-    return groupArr;
+  return groupArr;
 }
 
 async function handleSignIn(name, uid) {
-    const docRef = doc(db, "users", uid);
-    const docSnap = getDoc(docRef);
+  const docRef = doc(db, "users", uid);
+  const docSnap = getDoc(docRef);
 
-    if ((await docSnap).exists()) {
-        const userData = (await docSnap).data();
-        console.log("user exists");
-        console.log(userData["name"]);
-    } else {
-        console.log("user does not exist");
-        
-        await setDoc(doc(db, "users", uid), {
-            name: name,
-            uid: uid,
-            groups: [],
-            busyDays: [],
-        });
+  if ((await docSnap).exists()) {
+    const userData = (await docSnap).data();
+    console.log("user exists");
+    console.log(userData["name"]);
+  } else {
+    console.log("user does not exist");
 
-        console.log("account created");
-    }
+    await setDoc(doc(db, "users", uid), {
+      name: name,
+      uid: uid,
+      groups: [],
+      busyDays: [],
+    });
+
+    console.log("account created");
+  }
 }
 
 async function handleCreateGroup(name) {
-    const groupName = getUID() + name;
-    await setDoc(doc(db, "groups", groupName), {
-        owner: getName(),
-        name: name,
-        members: [],
-        busyDays: {},
-    })
+  const groupName = getUID() + name;
+  await setDoc(doc(db, "groups", groupName), {
+    owner: getName(),
+    name: name,
+    members: [],
+    busyDays: {},
+  });
 
-    const currUserDoc = (await getDoc(doc(db, "users", getUID()))).data()
-    const currGroups =  currUserDoc["groups"]
-    currGroups.push(groupName)
+  const currUserDoc = (await getDoc(doc(db, "users", getUID()))).data();
+  const currGroups = currUserDoc["groups"];
+  currGroups.push(groupName);
 
-    await setDoc(doc(db, "users", getUID()), {
-        name: getName(),
-        uid: getUID(),
-        groups: currGroups
-    })
+  await setDoc(doc(db, "users", getUID()), {
+    name: getName(),
+    uid: getUID(),
+    groups: currGroups,
+  });
 }
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
+const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, handleSignIn, handleCreateGroup, getGroups, getUID, getName };
+export {
+  auth,
+  provider,
+  handleSignIn,
+  handleCreateGroup,
+  getGroups,
+  getUID,
+  getName,
+};
