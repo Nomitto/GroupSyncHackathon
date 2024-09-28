@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { auth, provider } from "../config"
+import { auth, provider, handleSignIn } from "../config"
 import { signInWithPopup } from "firebase/auth";
 import Home from "./Home";
 
 function SignIn() {
     const [value, setValue] = useState('')
-    const handleClick = () => {
-        signInWithPopup(auth, provider).then((data) => {
+    const handleClick = async () => {
+        signInWithPopup(auth, provider).then(async (data) => {
             setValue(data.user.email)
             localStorage.setItem("email", data.user.email)
+            await handleSignIn(data.user.displayName, data.user.uid)
         })
     }
 
