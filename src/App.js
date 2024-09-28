@@ -1,17 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
-import { GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
+import Groups from './groups/Groups';
+import Chat from './chat/Chat';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Google Calendar GroupSync
-        </p>
-      </header>
+    <div className="container">
+        <Groups/>
+        <Chat/>
     </div>
   );
 }
