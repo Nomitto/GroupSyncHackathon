@@ -85,4 +85,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, handleSignIn, handleCreateGroup, getGroups, getUID, getName };
+export { auth, provider, handleSignIn, handleCreateGroupBE, getGroups, getUID, getName };

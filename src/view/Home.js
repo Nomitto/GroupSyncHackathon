@@ -5,7 +5,7 @@ import './Home.css'; // Import the CSS file
 
 import CreateGroupButton from "../components/CreateGroupButton.tsx";
 import CreateGroupPopUp from "../components/CreateGroupPopUp.tsx";
-import handleCreateGroupBE from "../firebase.js";
+import {handleCreateGroupBE} from "../firebase.js";
 
 function Home() {
   const [showPopUp, setShowPopUp] = useState(false);
@@ -27,7 +27,7 @@ function Home() {
       return;
     }
     console.log(`Group created: ${groupName}, with members: ${emails.join(", ")}`);
-    handleCreateGroupBE();
+    handleCreateGroupBE(groupName);
     handleClosePopUp();
   };
 
@@ -59,11 +59,28 @@ function Home() {
       return <p>Loading...</p>
   }
 
+  let greeting = "Welcome, " + getName();
+
     return (
-        <div>
-            <h1>Home Page</h1>
-            <button onClick={logout}>Logout</button>
-        </div>
+      <div className="home-container">
+      <h1>{greeting}</h1>
+
+      {/* Logout Button */}
+      <button onClick={handleLogout} className="logout-button">
+        Logout
+      </button>
+
+      {/* Button to open Create Group popup */}
+      <CreateGroupButton onClick={handleOpenPopUp} />
+
+      {/* Group creation popup */}
+      {showPopUp && (
+        <CreateGroupPopUp
+          closePopUp={handleClosePopUp}
+          handleCreateGroup={handleCreateGroup}
+        />
+      )}
+    </div>
     );
 }
 
