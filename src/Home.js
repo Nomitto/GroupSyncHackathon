@@ -1,15 +1,20 @@
 import React from "react";
+import { useNavigate, Link } from 'react-router-dom';
 
-function Home(){
-    const logout =()=>{
-        localStorage.clear()
-        window.location.reload()
-    }
+function Home() {
+    const navigate = useNavigate();
+    const logout = () => {
+        localStorage.clear();
+        navigate('/signin');
+    };
+
     return (
         <div>
-            <h1>Home Page</h1>
+            <h1>GroupSync</h1>
+            <Link to="/calendar">View Calendar</Link>
             <button onClick={logout}>Logout</button>
         </div>
     );
 }
+
 export default Home;
