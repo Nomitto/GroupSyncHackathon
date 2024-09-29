@@ -3,6 +3,7 @@
   height: 95vh;
   background-color: darkgray;
   border-radius: 12px;
+  display: flex;
 }
 
 body {

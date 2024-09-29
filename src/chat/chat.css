@@ -1,3 +1,114 @@
 .chatDetail {
+    flex: 3;
+    border-left: 1px solid #dddddd35;
+    border-right: 1px solid #dddddd35;
 
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 15px;
+
+    .top {
+        padding-left: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .group {
+            display: flex;
+            align-items: center;
+
+            font-weight: bold;
+            font-size: 14pt;
+
+            .bottom {
+                font-size: 12px;
+            }
+        }
+    }
+
+    .center {
+        padding: 20px;
+        flex: 1;
+
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .message {
+            max-width: 60%;
+            display: flex;
+            flex-direction: column;
+
+            &.notOwn {
+                align-self: flex-start;
+                align-items: first baseline;
+                color: black;
+                
+                .text {
+                    text-align: left;
+                    align-content: center;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    font-weight: bold;
+                    flex-direction: column;
+                    color:white;
+                    gap: 5px;
+                    background-color: black;
+                    border-radius: 30px;
+                }
+            }
+
+            &.own {
+                align-self: flex-end;
+                align-items: last baseline;
+                color: black;
+                
+                .text {
+                    text-align: right;
+                    align-content: center;
+                    padding-right: 10px;
+                    padding-left: 10px;
+                    font-weight: bold;
+                    color:white;
+                    flex-direction: column;
+                    gap: 5px;
+                    background-color: darkblue;
+                    border-radius: 30px;
+                }
+            }
+        }
+    }
+
+    .bottom {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #dddddd35;
+    
+        .textbox {
+            flex: 1;
+            margin-left: 10px;
+            margin-right: 20px;
+            background-color: lightgray;
+            border: none;
+            outline: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .sendButton {
+            background-color: darkblue;
+            color: white;
+            font-weight: bold;
+            font-size: 10pt;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    }
 }

@@ -9,12 +9,13 @@ import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC0pRjX1S6fCnU4lXIcTZYE2k5Eg_qgh-w",
-  authDomain: "groupsync-96180.firebaseapp.com",
-  projectId: "groupsync-96180",
-  storageBucket: "groupsync-96180.appspot.com",
-  messagingSenderId: "835797552606",
-  appId: "1:835797552606:web:804155d87f0cc0dc34214f"
+    apiKey: "AIzaSyD6qYmhQpAqdf9WuiC8VrU7QovXPPcHcrU",
+    authDomain: "groupsync2-67f21.firebaseapp.com",
+    projectId: "groupsync2-67f21",
+    storageBucket: "groupsync2-67f21.appspot.com",
+    messagingSenderId: "59246062851",
+    appId: "1:59246062851:web:22159c6fe154f50d460d36",
+    measurementId: "G-X7P94NC66T"
 };
 
 firebase.initializeApp(firebaseConfig)
@@ -23,6 +24,10 @@ const db = getFirestore();
 function getUID() {
     const user = getAuth(app).currentUser;
     return user.uid;
+}
+
+function getUser() {
+    return getAuth(app).currentUser;
 }
 
 function getName() {
@@ -85,4 +90,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
 
-export { auth, provider, handleSignIn, handleCreateGroup, getGroups, getUID, getName };
+export { auth, provider, handleSignIn, handleCreateGroup, getGroups, getUID, getName, getUser };

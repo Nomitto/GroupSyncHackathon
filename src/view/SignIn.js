@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth, provider, handleSignIn } from "../firebase"
 import { signInWithPopup } from "firebase/auth";
-import Home from "./Home";
 import App from "../App";
 
 function SignIn() {
@@ -21,7 +20,7 @@ function SignIn() {
 
     return (
         <div>
-            {signedIn ? <App/> : <button onClick={handleClick}>Sign In With Google</button> }
+            { signedIn ? <App /> : <button onClick={handleClick}>Sign In With Google</button> }
         </div>
     );
 }
