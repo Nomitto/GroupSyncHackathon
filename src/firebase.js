@@ -9,13 +9,13 @@ import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyD6qYmhQpAqdf9WuiC8VrU7QovXPPcHcrU",
-    authDomain: "groupsync2-67f21.firebaseapp.com",
-    projectId: "groupsync2-67f21",
-    storageBucket: "groupsync2-67f21.appspot.com",
-    messagingSenderId: "59246062851",
-    appId: "1:59246062851:web:22159c6fe154f50d460d36",
-    measurementId: "G-X7P94NC66T"
+    apiKey: "AIzaSyB6kszWeTFwMqnvPx_01Y_47Cjzs65Pufg",
+    authDomain: "groupsync3-2bcd1.firebaseapp.com",
+    projectId: "groupsync3-2bcd1",
+    storageBucket: "groupsync3-2bcd1.appspot.com",
+    messagingSenderId: "25760581876",
+    appId: "1:25760581876:web:ed9f386f99a984b11336a1",
+    measurementId: "G-PJZLXMYQ44"
 };
 
 firebase.initializeApp(firebaseConfig)
