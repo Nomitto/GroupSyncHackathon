@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './Home';
 import SignIn from './SignIn';
 import Calendar from './Calendar';
+import GroupCalendarHeatmap from './GroupCalendarHeatmap'; 
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/home" element={<Home />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/heatmap" element={<GroupCalendarHeatmap groupId="testGroup" />} />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </div>

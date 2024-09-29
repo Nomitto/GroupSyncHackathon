@@ -12,6 +12,7 @@ function Home() {
         <div>
             <h1>GroupSync</h1>
             <Link to="/calendar">View Calendar</Link>
+            <Link to="/heatmap">View Calendar Heatmap</Link>
             <button onClick={logout}>Logout</button>
         </div>
     );
