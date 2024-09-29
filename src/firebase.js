@@ -66,12 +66,17 @@ async function handleSignIn(name, uid) {
 }
 
 async function handleCreateGroup(name) {
-    const groupName = getUID() + name;
-    await setDoc(doc(db, "groups", groupName), {
-        owner: getName(),
-        name: name,
-        members: [],
-        busyDays: {},
+    const groupName = name; // getUID() + name;
+
+    // await setDoc(doc(db, "groups", groupName), {
+    //     owner: getName(),
+    //     name: name,
+    //     members: [],
+    //     busyDays: {},
+    // })
+
+    await setDoc(doc(db, "chats", groupName), {
+        messages: []
     })
 
     const currUserDoc = (await getDoc(doc(db, "users", getUID()))).data()

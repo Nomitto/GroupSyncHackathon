@@ -7,6 +7,30 @@
         flex: 1;
     }
 
+    .heading {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .groupTitle {
+            padding-left: 40px;
+            flex: 1;
+        }
+
+        .addGroup {
+            font-size: 20pt;
+            font-weight: bold;
+            padding-left: 10px;
+            padding-right: 10px;
+            color: white;
+            background-color: darkblue;
+            border: 0px;
+            border-radius: 10px;
+            margin-right: 6%;
+            cursor: pointer;
+        }
+    }
+
     .logout {
         margin: 10px;
         background-color: darkred;
@@ -18,6 +42,6 @@
     }
 }
 
-.groupTitle {
-    padding-left: 40px;
+.single-group {
+    padding: 5px;
 }

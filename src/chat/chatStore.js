@@ -7,10 +7,11 @@ export const useChatStore = create((set) => ({
     user: null,
     changeChat: (chatId, user) => {
         console.log(chatId)
+        const currentUser = getUser()
 
         return set({
             chatName: chatId,
-            user: user
+            user: currentUser
         })
     },
 }))

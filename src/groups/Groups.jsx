@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react"
 import "./group.css"
 import "./groupInfo.css"
-import { getGroups, getUser } from "../firebase"
+import { getGroups, getUser, handleCreateGroup } from "../firebase"
 import { useChatStore } from "../chat/chatStore"
+import CreateGroupPopUp from "./CreateGroup.tsx"
 
 const Groups = () => {
     const [loading, setLoading] = useState(true)
     const [userGroups, setUserGroups] = useState([])
-    const { currentUser, setCurrentUser } = useState();
     const { changeChat } = useChatStore();
+    const [showPopUp, setShowPopUp] = useState(false)
+
+    const openPopUp = () => {
+        setShowPopUp(true);
+    }
+
+    const closePopUp = () => {
+        setShowPopUp(false);
+    }
 
     const logout = () => {
         localStorage.clear()
@@ -24,7 +33,6 @@ const Groups = () => {
             try {
                 const groups = await getGroups();
                 setUserGroups(groups);
-                currentUser = setCurrentUser(getUser());
             } catch (error) {
                 console.log(error);
             } finally {
@@ -42,7 +50,10 @@ const Groups = () => {
     return (
         <div className="group">
             <div className="top">
-                <h2 className="groupTitle">Groups</h2>
+                <div className="heading">
+                    <h2 className="groupTitle">Groups</h2>
+                    <button className="addGroup" onClick={openPopUp}>+</button>
+                </div>
                 {userGroups.map((item, index) => (
                     <div className="single-group" key={index}>
                         <div className="groupInfo" onClick={() => handleSelect(item)}>
@@ -52,6 +63,7 @@ const Groups = () => {
                         </div>
                     </div>
                 ))}
+                {showPopUp && <CreateGroupPopUp closePopUp={closePopUp} handleCreateGroup={handleCreateGroup}></CreateGroupPopUp>}
             </div>
             <button className="logout" onClick={logout}>Logout</button>
         </div>

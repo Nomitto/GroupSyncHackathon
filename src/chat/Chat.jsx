@@ -37,8 +37,12 @@ const Chat = () => {
     useEffect(() => {
         const unSub = onSnapshot(doc(db, "chats", chatName), (res) => {
             setChat(res.data()["messages"])
-        })
-    }, [])
+        });
+
+        return () => {
+            unSub();
+        }
+    }, [chatName])
     
     return (
         <div className="chatDetail">
