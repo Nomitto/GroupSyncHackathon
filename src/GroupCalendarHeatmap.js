@@ -1,30 +1,68 @@
 import React, { useState, useEffect } from 'react'
 import CalendarHeatmap from 'react-calendar-heatmap'
 import { Tooltip } from 'react-tooltip';
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import 'react-calendar-heatmap/dist/styles.css'
 import moment from 'moment'
 import './GroupCalendarHeatmap.css';
 
-function GroupCalendarHeatmap({groupId}) {
+function GroupCalendarHeatmap() {
     const [heatMapData, setHeatMapData] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [user, setUser] = useState(null)
     const today = new Date()
 
-    useEffect(() => {
-        fetchGroupCalendarData(groupId)
-    }, [groupId])
+    const login = useGoogleLogin({
+        onSuccess: (codeResponse) => setUser(codeResponse),
+        onError: (error) => console.log('Login Failed:', error),
+        scope: 'https://www.googleapis.com/auth/calendar.readonly'
+    });
 
-    const fetchGroupCalendarData = async (groupId) => {
-        const dummyData = generateDummyData()
-        setHeatMapData(dummyData)
+    useEffect(() => {
+        if (user) {
+            fetchCalendarData()
+        }
+    }, [user])
+
+    const fetchCalendarData = async () => {
+        setIsLoading(true)
+        setError(null)
+        try {
+            const response = await axios.get(
+                `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`,
+                    },
+                    params: {
+                        timeMin: moment().subtract(150, 'days').toISOString(),
+                        timeMax: moment().toISOString(),
+                        singleEvents: true,
+                        orderBy: 'startTime'
+                    }
+                }
+            )
+            const formattedData = formatCalendarData(response.data.items)
+            setHeatMapData(formattedData)
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
-    const generateDummyData = () => {
-        return getRange(200).map(index => {
-            return {
-                date: shiftDate(today, -index),
-                count: getRandomInt(0, 4),
-            }
+    const formatCalendarData = (events) => {
+        const eventCounts = {}
+        events.forEach(event => {
+            const date = moment(event.start.dateTime || event.start.date).format('YYYY-MM-DD')
+            eventCounts[date] = (eventCounts[date] || 0) + 1
         })
+        return Object.entries(eventCounts).map(([date, count]) => ({
+            date: new Date(date),
+            count: Math.min(count, 4)
+        }))
     }
 
     const getColor = (value) => {
@@ -34,11 +72,23 @@ function GroupCalendarHeatmap({groupId}) {
         return `color-github-${value.count}`
     }
 
+    if (!user) {
+        return <button onClick={() => login()}>Sign in with Google</button>
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>
+    }
+
     return (
         <div className="p-4">
-            <h2 className="text-xl font-bold mb-4">Group Availability</h2>
+            <h2 className="text-xl font-bold mb-4">Your Calendar Activity</h2>
             <CalendarHeatmap
-                startDate={shiftDate(today, -150)}
+                startDate={moment().subtract(150, 'days').toDate()}
                 endDate={today}
                 values={heatMapData}
                 classForValue={(value) => getColor(value)}
@@ -47,33 +97,21 @@ function GroupCalendarHeatmap({groupId}) {
                         return null
                     }
                     return {
-                        'data-tip': `${value.date.toISOString().slice(0, 10)}: ${value.count} people available`,
+                        'data-tooltip-id': 'calendar-tooltip',
+                        'data-tooltip-content': `${moment(value.date).format('YYYY-MM-DD')}: ${value.count} events`,
                     }
                 }}
                 showWeekdayLabels={true}
-                onClick={value => value && alert(`${value.date.toISOString().slice(0, 10)}: ${value.count} people available`)}
+                horizontal={false}
+                onClick={value => value && alert(`${moment(value.date).format('YYYY-MM-DD')}: ${value.count} events`)}
             />
-            <Tooltip />
+            <Tooltip id="calendar-tooltip" />
             <div className="mt-4 flex justify-center">
                 <div className="flex items-center">
                 </div>
             </div>
         </div>
     );
-}
-
-function shiftDate(date, numDays) {
-    const newDate = new Date(date);
-    newDate.setDate(newDate.getDate() + numDays);
-    return newDate;
-}
-
-function getRange(count) {
-    return Array.from({ length: count }, (_, i) => i);
-}
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export default GroupCalendarHeatmap
