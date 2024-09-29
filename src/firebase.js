@@ -3,6 +3,36 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import firebase from "firebase/compat/app";
 import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
+import { gapi } from "gapi-script";
+
+const API_KEY = "AIzaSyBqy78XyR_vlenpR9IxSbrW_QNAPxq2jPI";
+const CLIENT_ID =
+  "357613363605-s18klentru09gkgdjcqeo8q1k57r1hi1.apps.googleusercontent.com";
+const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+async function initializeGapiClient() {
+  return new Promise((resolve, reject) => {
+    gapi.load("client:auth2", () => {
+      gapi.client
+        .init({
+          apiKey: API_KEY,
+          clientId: CLIENT_ID,
+          discoveryDocs: [
+            "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+          ],
+          scope: SCOPES,
+        })
+        .then(() => {
+          console.log("GAPI client initialized");
+          resolve();
+        })
+        .catch((error) => {
+          console.error("Error initializing GAPI client", error);
+          reject(error);
+        });
+    });
+  });
+}
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,6 +68,53 @@ async function getGroups() {
   return groupArr;
 }
 
+async function getDays() {
+  await initializeGapiClient();
+  await gapi.auth2.getAuthInstance().signIn();
+  const events = await new Promise((resolve, reject) => {
+    gapi.client.calendar.events
+      .list({
+        calendarId: "primary",
+        timeMin: new Date().toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: "startTime",
+      })
+      .then((response) => {
+        resolve(response.result.items);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+
+  const days = events.map((event) => {
+    return new Date(
+      event.start.dateTime || event.start.date
+    ).toLocaleDateString();
+  });
+
+  const currUserDoc = (await getDoc(doc(db, "users", getUID()))).data();
+  const currGroups = currUserDoc["groups"];
+
+  for (let i = 0; i < currGroups.length; i++) {
+    const groupDoc = (await getDoc(doc(db, "groups", currGroups[i]))).data();
+    const groupDays = groupDoc["busyDays"];
+
+    groupDays[getUID()] = days;
+
+    await setDoc(doc(db, "groups", currGroups[i]), {
+      owner: groupDoc["owner"],
+      name: groupDoc["name"],
+      members: groupDoc["members"],
+      busyDays: groupDays,
+    });
+  }
+
+  return days;
+}
+
 async function handleSignIn(name, uid) {
   const docRef = doc(db, "users", uid);
   const docSnap = getDoc(docRef);
@@ -53,7 +130,7 @@ async function handleSignIn(name, uid) {
       name: name,
       uid: uid,
       groups: [],
-      busyDays: [],
+      busyDays: [await getDays()],
     });
 
     console.log("account created");

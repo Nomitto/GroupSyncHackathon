@@ -10,6 +10,7 @@
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "firebase": "^10.13.2",
+    "gapi-script": "^1.2.0",
     "googleapis": "^144.0.0",
     "https-browserify": "^1.0.0",
     "querystring-es3": "^0.2.1",
