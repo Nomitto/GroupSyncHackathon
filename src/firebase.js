@@ -25,10 +25,12 @@ function getUID() {
     return user.uid;
 }
 
+// getName function in firebase.js or auth.js
 function getName() {
-    const user = getAuth(app).currentUser;
-    return user.displayName;
-}
+    const user = auth.currentUser;  // Fetch the user from Firebase
+    return user && user.displayName ? user.displayName : "Guest"; // Return displayName if it exists, otherwise return "Guest"
+  }
+  
 
 async function getGroups() {
     const docSnap = getDoc(doc(db, "users", getUID()));

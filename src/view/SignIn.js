@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { auth, provider, handleSignIn } from "../firebase";
+import { auth, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import Home from "./Home";
 import './SignIn.css';
 
 function SignIn() {
-    const [signedIn, setValue] = useState('');
+    const [signedIn, setSignedIn] = useState('');
     const [stage, setStage] = useState(0); // Track the current stage (0: Hello, 1: Welcome, 2: Sign In Button)
+    const navigate = useNavigate();
 
     const handleClick = async () => {
         signInWithPopup(auth, provider).then(async (data) => {
-            setValue(data.user.email);
+            setSignedIn(data.user.email);
             localStorage.setItem("email", data.user.email);
-            await handleSignIn(data.user.displayName, data.user.uid);
+            navigate('/home'); // Navigate to home after successful sign in
         });
     };
 
     useEffect(() => {
-        setValue(localStorage.getItem("email"));
+        const email = localStorage.getItem("email");
+        if (email) {
+            setSignedIn(email);
+            navigate('/home'); // If user is already signed in, navigate to home
+        }
 
         // Stage 1: Show "Welcome to GroupSync" after "Hello" fades out (2 seconds)
         const welcomeTimer = setTimeout(() => {
@@ -34,7 +40,7 @@ function SignIn() {
             clearTimeout(welcomeTimer);
             clearTimeout(signInButtonTimer);
         };
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="signin-container">

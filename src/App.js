@@ -1,18 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-import { GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Home from './view/Home';
+import SignIn from './view/SignIn';
+import Calendar from './Calendar';
+import GroupCalendarHeatmap from './GroupCalendarHeatmap'; 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Google Calendar GroupSync
-        </p>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/heatmap" element={<GroupCalendarHeatmap groupId="testGroup" />} />
+          <Route path="*" element={<Navigate to="/home" />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
