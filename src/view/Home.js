@@ -6,6 +6,7 @@ import './Home.css'; // Import the CSS file
 import CreateGroupButton from "../components/CreateGroupButton.tsx";
 import CreateGroupPopUp from "../components/CreateGroupPopUp.tsx";
 import {handleCreateGroupBE} from "../firebase.js";
+import NavBar from "../components/NavBar.tsx";
 
 function Home() {
   const [showPopUp, setShowPopUp] = useState(false);
@@ -63,6 +64,7 @@ function Home() {
 
     return (
       <div className="home-container">
+      <NavBar></NavBar>
       <h1>{greeting}</h1>
 
       {/* Logout Button */}

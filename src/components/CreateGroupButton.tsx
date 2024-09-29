@@ -1,9 +1,9 @@
 // CreateGroupButton.tsx
-import React from 'react';
+import React from "react";
 
 const CreateGroupButton = ({ onClick }) => {
   return (
-    <button onClick={onClick}>
+    <button className="create-group-button" onClick={onClick}>
       Create Group
     </button>
   );
